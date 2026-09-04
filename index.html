@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>계수중 PC방 좌석 예약</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <h1 class="title">계수중 PC방 좌석 예약</h1>
+  <p class="subtitle">원하는 좌석을 눌러 예약하세요. 예약이 완료되면 4자리 코드가 발급됩니다.<br>행사 당일 해당 좌석 컴퓨터에 이 코드를 입력하면 이용할 수 있어요.</p>
+
+  <div class="legend">
+    <span><i class="dot free"></i>빈 좌석</span>
+    <span><i class="dot selected"></i>선택함</span>
+    <span><i class="dot taken"></i>예약됨</span>
+  </div>
+
+  <div class="room" id="room">
+    <div class="front-label">← 화면 / 교탁 방향</div>
+    <div id="rows"></div>
+  </div>
+
+  <a href="admin.html" class="admin-link">관리자 페이지</a>
+</div>
+
+<div class="panel" id="panel">
+  <div class="panel-inner">
+    <div id="formView">
+      <div class="panel-seat" id="panelSeatLabel"></div>
+      <div class="field">
+        <label for="name">이름</label>
+        <input id="name" type="text" placeholder="예: 홍길동" maxlength="20">
+      </div>
+      <div class="field">
+        <label for="grade">학년/반 (선택)</label>
+        <input id="grade" type="text" placeholder="예: 2학년 3반" maxlength="20">
+      </div>
+      <div class="error" id="errorMsg"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="cancelBtn">취소</button>
+        <button class="btn btn-primary" id="submitBtn">예약하기 (30분)</button>
+      </div>
+    </div>
+    <div id="resultView" style="display:none">
+      <div class="result">
+        <div class="panel-seat" id="resultSeatLabel"></div>
+        <div class="result-code" id="resultCode"></div>
+        <div class="result-note">이 번호를 꼭 기억하거나 캡처해두세요.<br>행사 당일 해당 좌석 컴퓨터 화면에 그대로 입력하면 이용이 시작됩니다.</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="doneBtn">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
