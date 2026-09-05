@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>관리자 - 예약 현황</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--text-dim); font-weight: 700; font-size: 12px; }
+  .code-cell { color: var(--accent); font-weight: 700; letter-spacing: 0.1em; }
+  .toolbar { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .toolbar input { flex: 1; }
+  .count { color: var(--text-dim); font-size: 13px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="title">예약 현황 (관리자)</h1>
+  <p class="subtitle">전체 예약 목록을 확인하고 JSON 파일로 내려받아 PC 관리 백엔드에 넣으세요.</p>
+
+  <div class="field">
+    <label for="adminKey">관리자 키</label>
+    <div class="toolbar">
+      <input id="adminKey" type="password" placeholder="ADMIN_KEY 입력">
+      <button class="btn btn-primary" style="flex:0 0 auto; padding:11px 16px;" id="loadBtn">불러오기</button>
+    </div>
+  </div>
+
+  <div class="error" id="errorMsg"></div>
+  <div class="count" id="count"></div>
+
+  <table id="table" style="display:none">
+    <thead>
+      <tr><th>좌석</th><th>학번</th><th>코드</th><th>예약시각</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div class="btn-row" style="max-width:240px; margin-top:20px;">
+    <button class="btn btn-primary" id="downloadBtn" style="display:none">JSON 다운로드</button>
+  </div>
+</div>
+<script src="admin.js"></script>
+</body>
+</html>
