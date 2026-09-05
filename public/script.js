@@ -5,7 +5,6 @@ const roomEl = document.getElementById('rows');
 const panel = document.getElementById('panel');
 const panelSeatLabel = document.getElementById('panelSeatLabel');
 const resultSeatLabel = document.getElementById('resultSeatLabel');
-const resultCode = document.getElementById('resultCode');
 const errorMsg = document.getElementById('errorMsg');
 const studentIdInput = document.getElementById('studentId');
 const phoneInput = document.getElementById('phone');
@@ -14,28 +13,25 @@ const submitBtn = document.getElementById('submitBtn');
 let selectedSeat = null;
 let takenSeats = new Set();
 
-function seatId(row, col) {
-  return `${row}-${col}`;
-}
-
 function renderRoom() {
   roomEl.innerHTML = '';
+  let seatNum = 1;
   ROWS.forEach((count, rIdx) => {
-    const row = rIdx + 1;
+    const isLastRow = rIdx === ROWS.length - 1;
     const rowEl = document.createElement('div');
-    rowEl.className = 'row';
+    rowEl.className = isLastRow ? 'row align-right' : 'row';
     for (let d = 0; d < count / 2; d++) {
       const deskEl = document.createElement('div');
       deskEl.className = 'desk';
       for (let s = 1; s <= 2; s++) {
-        const col = d * 2 + s;
-        const id = seatId(row, col);
+        const id = String(seatNum);
         const btn = document.createElement('button');
         btn.className = 'seat';
-        btn.textContent = `${row}-${col}`;
+        btn.textContent = id;
         btn.dataset.id = id;
         btn.addEventListener('click', () => onSeatClick(id, btn));
         deskEl.appendChild(btn);
+        seatNum++;
       }
       rowEl.appendChild(deskEl);
     }
@@ -125,7 +121,6 @@ submitBtn.addEventListener('click', async () => {
       return;
     }
     resultSeatLabel.textContent = `${selectedSeat}번 좌석`;
-    resultCode.textContent = data.code;
     document.getElementById('formView').style.display = 'none';
     document.getElementById('resultView').style.display = '';
     takenSeats.add(selectedSeat);

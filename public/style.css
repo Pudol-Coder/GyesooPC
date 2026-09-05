@@ -79,6 +79,7 @@ body {
   gap: 22px;
   margin-bottom: 18px;
 }
+.row.align-right { justify-content: flex-end; padding-right: calc(22px + 3px); }
 
 .desk {
   display: flex;

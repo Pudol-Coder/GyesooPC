@@ -1,10 +1,7 @@
 const { kv } = require('@vercel/kv');
 
 const VALID_SEATS = new Set();
-[6, 6, 6, 6, 6, 4].forEach((count, rIdx) => {
-  const row = rIdx + 1;
-  for (let col = 1; col <= count; col++) VALID_SEATS.add(`${row}-${col}`);
-});
+for (let i = 1; i <= 34; i++) VALID_SEATS.add(String(i));
 
 const RATE_LIMIT_MAX = 5; // 같은 IP에서 허용하는 최대 시도 횟수
 const RATE_LIMIT_WINDOW_SEC = 60; // 시간 창(초)
