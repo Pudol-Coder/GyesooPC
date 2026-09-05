@@ -18,7 +18,7 @@ async function load() {
       return;
     }
     lastData = data;
-    renderTable(data.reservations);
+    applyFilter();
     document.getElementById('count').textContent = `총 ${data.count}건`;
     document.getElementById('downloadBtn').style.display = data.count ? '' : 'none';
   } catch (e) {
@@ -82,6 +82,14 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function applyFilter() {
+  if (!lastData) return;
+  const q = document.getElementById('searchBox').value.trim();
+  const rows = q ? lastData.reservations.filter((r) => r.studentId.includes(q)) : lastData.reservations;
+  renderTable(rows);
+}
+
+document.getElementById('searchBox').addEventListener('input', applyFilter);
 document.getElementById('loadBtn').addEventListener('click', load);
 document.getElementById('downloadBtn').addEventListener('click', () => {
   if (!lastData) return;

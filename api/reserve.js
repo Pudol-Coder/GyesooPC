@@ -76,5 +76,5 @@ module.exports = async (req, res) => {
 
   await kv.hset('reservations', { [seat]: JSON.stringify(entry) });
 
-  res.status(200).json({ code });
+  res.status(200).json({ ok: true });
 };
