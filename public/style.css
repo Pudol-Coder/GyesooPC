@@ -79,24 +79,24 @@ body {
   gap: 22px;
   margin-bottom: 18px;
 }
-.row.align-right { justify-content: flex-end; padding-right: calc(22px + 3px); }
+.row.align-right { justify-content: flex-end; }
 
 .desk {
   display: flex;
-  gap: 3px;
+  gap: 4px;
   background: #0E1219;
-  padding: 6px;
-  border-radius: 3px;
+  padding: 8px;
+  border-radius: 4px;
 }
 
 .seat {
-  width: 40px;
-  height: 40px;
-  border-radius: 2px;
+  width: 56px;
+  height: 56px;
+  border-radius: 3px;
   background: var(--seat-free);
   border: 1px solid var(--line);
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.12s, transform 0.08s;
