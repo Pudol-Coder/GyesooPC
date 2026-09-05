@@ -7,7 +7,12 @@ const panelSeatLabel = document.getElementById('panelSeatLabel');
 const resultSeatLabel = document.getElementById('resultSeatLabel');
 const resultCode = document.getElementById('resultCode');
 const errorMsg = document.getElementById('errorMsg');
+<<<<<<< HEAD
 const studentIdInput = document.getElementById('studentId');
+=======
+const nameInput = document.getElementById('name');
+const gradeInput = document.getElementById('grade');
+>>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
 const submitBtn = document.getElementById('submitBtn');
 
 let selectedSeat = null;
@@ -70,9 +75,16 @@ function onSeatClick(id, btn) {
   errorMsg.classList.remove('show');
   document.getElementById('formView').style.display = '';
   document.getElementById('resultView').style.display = 'none';
+<<<<<<< HEAD
   studentIdInput.value = '';
   panel.classList.add('open');
   setTimeout(() => studentIdInput.focus(), 200);
+=======
+  nameInput.value = '';
+  gradeInput.value = '';
+  panel.classList.add('open');
+  setTimeout(() => nameInput.focus(), 200);
+>>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
 }
 
 document.getElementById('cancelBtn').addEventListener('click', closePanel);
@@ -87,9 +99,15 @@ function closePanel() {
 }
 
 submitBtn.addEventListener('click', async () => {
+<<<<<<< HEAD
   const studentId = studentIdInput.value.trim();
   if (!/^[0-9]{5}$/.test(studentId)) {
     errorMsg.textContent = '학번 5자리를 숫자로 입력해주세요.';
+=======
+  const name = nameInput.value.trim();
+  if (!name) {
+    errorMsg.textContent = '이름을 입력해주세요.';
+>>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
     errorMsg.classList.add('show');
     return;
   }
@@ -99,7 +117,11 @@ submitBtn.addEventListener('click', async () => {
     const res = await fetch('/api/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+<<<<<<< HEAD
       body: JSON.stringify({ seat: selectedSeat, studentId })
+=======
+      body: JSON.stringify({ seat: selectedSeat, name, grade: gradeInput.value.trim() })
+>>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
     });
     const data = await res.json();
     if (!res.ok) {
