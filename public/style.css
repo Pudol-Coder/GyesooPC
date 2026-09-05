@@ -79,20 +79,21 @@ body {
   gap: 22px;
   margin-bottom: 18px;
 }
+.desk {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  background: #0E1219;
+  padding: 8px;
+  border-radius: 4px;
+}
 .desk-placeholder {
+  flex: 0 0 132px;
   width: 132px;
   height: 72px;
   background: transparent;
   padding: 0;
   visibility: hidden;
-}
-
-.desk {
-  display: flex;
-  gap: 4px;
-  background: #0E1219;
-  padding: 8px;
-  border-radius: 4px;
 }
 
 .seat {
