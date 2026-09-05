@@ -21,7 +21,9 @@ async function load() {
     applyFilter();
     document.getElementById('count').textContent = `총 ${data.count}건`;
     document.getElementById('downloadBtn').style.display = data.count ? '' : 'none';
+    updateStats(data.count);
     loadInquiries();
+    loadReservationStatus();
   } catch (e) {
     errorMsg.textContent = '네트워크 오류가 발생했습니다.';
     errorMsg.classList.add('show');
@@ -147,3 +149,49 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
 });
 document.getElementById('searchBox').addEventListener('input', applyFilter);
 document.getElementById('loadBtn').addEventListener('click', load);
+
+const TOTAL_SEATS = 34;
+
+function updateStats(count) {
+  const percent = Math.round((count / TOTAL_SEATS) * 100);
+  document.getElementById('statsText').textContent = `${count} / ${TOTAL_SEATS}석 예약됨`;
+  document.getElementById('statsPercent').textContent = `${percent}%`;
+  document.getElementById('statsFill').style.width = `${percent}%`;
+}
+
+async function loadReservationStatus() {
+  try {
+    const res = await fetch('/api/settings');
+    const data = await res.json();
+    setToggleUI(data.open !== false);
+  } catch (e) {
+    document.getElementById('reservationStatusText').textContent = '확인 실패';
+  }
+}
+
+function setToggleUI(open) {
+  const toggle = document.getElementById('reservationToggle');
+  toggle.classList.toggle('on', open);
+  document.getElementById('reservationStatusText').textContent = open ? '접수 중' : '마감됨';
+}
+
+document.getElementById('reservationToggle').addEventListener('click', async () => {
+  const toggle = document.getElementById('reservationToggle');
+  const nextOpen = !toggle.classList.contains('on');
+  try {
+    const res = await fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': currentKey() },
+      body: JSON.stringify({ open: nextOpen }),
+    });
+    if (!res.ok) {
+      alert('변경에 실패했어요. 관리자 키를 확인해주세요.');
+      return;
+    }
+    setToggleUI(nextOpen);
+  } catch (e) {
+    alert('네트워크 오류가 발생했어요.');
+  }
+});
+
+loadReservationStatus();

@@ -233,10 +233,20 @@ body {
   color: var(--text-dim);
   font-size: 15px;
   line-height: 1.6;
-  margin: 0 0 36px;
+  margin: 0 0 12px;
   opacity: 0;
   animation: fadeInUp 0.5s ease forwards;
   animation-delay: 0.2s;
+}
+
+.landing-seatcount {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0 0 36px;
+  opacity: 0;
+  animation: fadeInUp 0.5s ease forwards;
+  animation-delay: 0.25s;
 }
 
 .landing-btns {

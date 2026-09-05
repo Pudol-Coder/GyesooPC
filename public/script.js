@@ -1,5 +1,6 @@
 // 컴퓨터실 배치: 1~5번째 줄 6대(책상 3개), 6번째 줄 4대(책상 2개)
 const ROWS = [6, 6, 6, 6, 6, 4];
+const TOTAL_SEATS = ROWS.reduce((a, b) => a + b, 0);
 
 const roomEl = document.getElementById('rows');
 const panel = document.getElementById('panel');
@@ -8,10 +9,16 @@ const resultSeatLabel = document.getElementById('resultSeatLabel');
 const errorMsg = document.getElementById('errorMsg');
 const studentIdInput = document.getElementById('studentId');
 const phoneInput = document.getElementById('phone');
+const captchaAnswerInput = document.getElementById('captchaAnswer');
+const captchaLabel = document.getElementById('captchaLabel');
 const submitBtn = document.getElementById('submitBtn');
+const seatCountEl = document.getElementById('seatCount');
+const closedBanner = document.getElementById('closedBanner');
 
 let selectedSeat = null;
 let takenSeats = new Set();
+let currentCaptchaToken = null;
+let reservationOpen = true;
 
 function renderRoom() {
   roomEl.innerHTML = '';
@@ -54,6 +61,8 @@ function applyTakenState() {
     btn.classList.toggle('taken', takenSeats.has(id));
     if (takenSeats.has(id)) btn.disabled = true;
   });
+  const remaining = TOTAL_SEATS - takenSeats.size;
+  seatCountEl.textContent = `${TOTAL_SEATS}석 중 ${remaining}석 남음`;
 }
 
 async function loadSeats() {
@@ -67,8 +76,35 @@ async function loadSeats() {
   }
 }
 
+async function loadReservationStatus() {
+  try {
+    const res = await fetch('/api/settings');
+    const data = await res.json();
+    reservationOpen = data.open !== false;
+    closedBanner.style.display = reservationOpen ? 'none' : '';
+  } catch (e) {
+    // 상태 조회 실패 시 기본값(열림)으로 진행
+  }
+}
+
+async function loadCaptcha() {
+  try {
+    const res = await fetch('/api/captcha');
+    const data = await res.json();
+    currentCaptchaToken = data.token;
+    captchaLabel.textContent = `사람 확인 (${data.question} = ?)`;
+  } catch (e) {
+    captchaLabel.textContent = '사람 확인 (문제를 불러오지 못했어요)';
+  }
+}
+
 function onSeatClick(id, btn) {
   if (btn.classList.contains('taken')) return;
+  if (!reservationOpen) {
+    errorMsg.textContent = '현재 예약이 마감되어 있어요.';
+    errorMsg.classList.add('show');
+    return;
+  }
   document.querySelectorAll('.seat.selected').forEach(el => el.classList.remove('selected'));
   btn.classList.add('selected');
   selectedSeat = id;
@@ -78,6 +114,8 @@ function onSeatClick(id, btn) {
   document.getElementById('resultView').style.display = 'none';
   studentIdInput.value = '';
   phoneInput.value = '';
+  captchaAnswerInput.value = '';
+  loadCaptcha();
   panel.classList.add('open');
   setTimeout(() => studentIdInput.focus(), 200);
 }
@@ -96,6 +134,8 @@ function closePanel() {
 submitBtn.addEventListener('click', async () => {
   const studentId = studentIdInput.value.trim();
   const phone = phoneInput.value.trim().replace(/[^0-9]/g, '');
+  const captchaAnswer = captchaAnswerInput.value.trim();
+
   if (!/^[0-9]{5}$/.test(studentId)) {
     errorMsg.textContent = '학번 5자리를 숫자로 입력해주세요.';
     errorMsg.classList.add('show');
@@ -106,13 +146,25 @@ submitBtn.addEventListener('click', async () => {
     errorMsg.classList.add('show');
     return;
   }
+  if (!captchaAnswer) {
+    errorMsg.textContent = '사람 확인 계산 결과를 입력해주세요.';
+    errorMsg.classList.add('show');
+    return;
+  }
+
   submitBtn.disabled = true;
   submitBtn.textContent = '처리 중...';
   try {
     const res = await fetch('/api/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ seat: selectedSeat, studentId, phone })
+      body: JSON.stringify({
+        seat: selectedSeat,
+        studentId,
+        phone,
+        captchaToken: currentCaptchaToken,
+        captchaAnswer,
+      })
     });
     const data = await res.json();
     if (!res.ok) {
@@ -120,12 +172,18 @@ submitBtn.addEventListener('click', async () => {
         ALREADY_TAKEN: '이미 다른 사람이 예약한 좌석입니다.',
         DUPLICATE_STUDENT: '이미 이 학번으로 예약된 좌석이 있습니다.',
         TOO_MANY_REQUESTS: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.',
+        CAPTCHA_INVALID: '사람 확인 답이 틀렸어요. 다시 시도해주세요.',
+        RESERVATION_CLOSED: '현재 예약이 마감되어 있어요.',
       };
       errorMsg.textContent = messages[data.error] || '예약에 실패했습니다. 다시 시도해주세요.';
       errorMsg.classList.add('show');
       if (data.error === 'ALREADY_TAKEN') {
         takenSeats.add(selectedSeat);
         applyTakenState();
+      }
+      if (data.error === 'CAPTCHA_INVALID') {
+        loadCaptcha();
+        captchaAnswerInput.value = '';
       }
       return;
     }
@@ -150,3 +208,4 @@ document.getElementById('doneBtn').addEventListener('click', () => {
 
 renderRoom();
 loadSeats();
+loadReservationStatus();

@@ -25,6 +25,27 @@
   }
   .delete-btn:hover { background: var(--danger); color: #fff; }
   .delete-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .stats-bar {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .stats-top { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+  .stats-track { background: #0E1219; border-radius: 999px; height: 8px; overflow: hidden; }
+  .stats-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s ease; }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+  .toggle-switch {
+    width: 44px; height: 24px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--seat-taken); position: relative; cursor: pointer; flex: none;
+  }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+    background: #fff; border-radius: 50%; transition: left 0.2s ease;
+  }
+  .toggle-switch.on::after { left: 22px; }
 </style>
 </head>
 <body>
@@ -41,6 +62,23 @@
   </div>
 
   <div class="error" id="errorMsg"></div>
+
+  <div class="stats-bar">
+    <div class="stats-top">
+      <span id="statsText">예약 현황을 불러와주세요</span>
+      <span id="statsPercent"></span>
+    </div>
+    <div class="stats-track"><div class="stats-fill" id="statsFill"></div></div>
+
+    <div class="toggle-row">
+      <span style="font-size:13px; color:var(--text-dim);">예약 접수 상태</span>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span id="reservationStatusText" style="font-size:13px; color:var(--text-dim);">확인 중...</span>
+        <div class="toggle-switch" id="reservationToggle"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="count" id="count"></div>
 
   <div class="field" style="margin-top:12px;">

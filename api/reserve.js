@@ -1,4 +1,5 @@
 const { kv } = require('@vercel/kv');
+const { verify: verifyCaptcha } = require('../lib/captcha');
 
 const VALID_SEATS = new Set();
 for (let i = 1; i <= 34; i++) VALID_SEATS.add(String(i));
@@ -18,6 +19,13 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // --- 예약 오픈/마감 여부 확인 ---
+  const isOpen = await kv.get('reservationOpen');
+  if (isOpen === false) {
+    res.status(403).json({ error: 'RESERVATION_CLOSED' });
+    return;
+  }
+
   // --- 속도 제한: 같은 IP가 짧은 시간에 너무 많이 시도하지 못하게 ---
   const ip = getClientIp(req);
   const rateKey = `ratelimit:reserve:${ip}`;
@@ -30,7 +38,13 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const { seat, studentId, phone } = req.body || {};
+  const { seat, studentId, phone, captchaToken, captchaAnswer } = req.body || {};
+
+  // --- 캡차 검증 ---
+  if (!verifyCaptcha(captchaToken, captchaAnswer)) {
+    res.status(400).json({ error: 'CAPTCHA_INVALID' });
+    return;
+  }
 
   if (!seat || !VALID_SEATS.has(seat)) {
     res.status(400).json({ error: 'INVALID_SEAT' });
