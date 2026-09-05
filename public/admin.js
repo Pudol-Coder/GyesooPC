@@ -20,7 +20,6 @@ async function load() {
     lastData = data;
     applyFilter();
     document.getElementById('count').textContent = `총 ${data.count}건`;
-    document.getElementById('downloadBtn').style.display = data.count ? '' : 'none';
     updateStats(data.count);
     loadInquiries();
     loadReservationStatus();
@@ -137,16 +136,6 @@ async function onDeleteInquiry(id, btn) {
     btn.disabled = false;
   }
 }
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  if (!lastData) return;
-  const blob = new Blob([JSON.stringify(lastData.reservations, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `reservations-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-});
 document.getElementById('searchBox').addEventListener('input', applyFilter);
 document.getElementById('loadBtn').addEventListener('click', load);
 
