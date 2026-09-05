@@ -16,11 +16,20 @@ let takenSeats = new Set();
 function renderRoom() {
   roomEl.innerHTML = '';
   let seatNum = 1;
-  ROWS.forEach((count, rIdx) => {
-    const isLastRow = rIdx === ROWS.length - 1;
+  const TOTAL_DESK_SLOTS = 3; // 한 줄에 최대 책상 3개 기준으로 열을 맞춤
+  ROWS.forEach((count) => {
     const rowEl = document.createElement('div');
-    rowEl.className = isLastRow ? 'row align-right' : 'row';
-    for (let d = 0; d < count / 2; d++) {
+    rowEl.className = 'row';
+    const deskCount = count / 2;
+    const emptySlots = TOTAL_DESK_SLOTS - deskCount;
+
+    for (let e = 0; e < emptySlots; e++) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'desk desk-placeholder';
+      rowEl.appendChild(placeholder);
+    }
+
+    for (let d = 0; d < deskCount; d++) {
       const deskEl = document.createElement('div');
       deskEl.className = 'desk';
       for (let s = 1; s <= 2; s++) {

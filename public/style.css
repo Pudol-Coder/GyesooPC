@@ -79,7 +79,13 @@ body {
   gap: 22px;
   margin-bottom: 18px;
 }
-.row.align-right { justify-content: flex-end; }
+.desk-placeholder {
+  width: 132px;
+  height: 72px;
+  background: transparent;
+  padding: 0;
+  visibility: hidden;
+}
 
 .desk {
   display: flex;
