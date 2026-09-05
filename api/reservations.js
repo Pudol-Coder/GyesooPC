@@ -14,11 +14,7 @@ module.exports = async (req, res) => {
   }
 
   const all = await kv.hgetall('reservations');
-<<<<<<< HEAD
   const list = all ? Object.values(all) : [];
-=======
-  const list = all ? Object.values(all).map((v) => JSON.parse(v)) : [];
->>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
   list.sort((a, b) => a.seat.localeCompare(b.seat, undefined, { numeric: true }));
 
   res.status(200).json({ count: list.length, reservations: list });

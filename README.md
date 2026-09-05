@@ -7,9 +7,11 @@
 
 1. 이 폴더를 GitHub 저장소로 push
 2. https://vercel.com 에서 New Project → 방금 만든 저장소 선택 → Deploy
-3. **Vercel KV 연결 (필수)**
-   - Vercel 프로젝트 대시보드 → Storage 탭 → Create Database → **KV** 선택
-   - 생성 후 프로젝트에 연결(Connect)하면 `KV_REST_API_URL`, `KV_REST_API_TOKEN` 등 환경변수가 자동으로 추가됩니다
+3. **데이터 저장소 연결 (필수)**
+   - Vercel 프로젝트 대시보드 → Storage 탭 → Create Database
+   - 목록에서 **Upstash** (Upstash Redis) 선택 — 예전 "Vercel KV"가 이름만 Upstash로 바뀐 것으로, key-value 저장소는 동일합니다
+   - Free 플랜으로 생성 → 프로젝트에 Connect
+   - 연결하면 `KV_REST_API_URL`, `KV_REST_API_TOKEN` 환경변수가 자동으로 설정되어 `@vercel/kv` 코드가 코드 수정 없이 그대로 동작합니다
    - 연결 후 재배포(Redeploy) 한 번 해주세요
 4. **관리자 키 설정 (선택이지만 권장)**
    - 프로젝트 Settings → Environment Variables → `ADMIN_KEY` = 원하는 비밀번호 추가

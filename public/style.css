@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-=======
-@font-face {
-  font-family: 'Pretendard';
-  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2');
-  font-weight: 400;
-}
-@font-face {
-  font-family: 'Pretendard';
-  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2');
-  font-weight: 700;
-}
-
->>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
 :root {
   --bg: #12161F;
   --bg-raised: #1A2030;
@@ -33,11 +19,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-<<<<<<< HEAD
   font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-=======
-  font-family: 'Pretendard', -apple-system, sans-serif;
->>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
   min-height: 100vh;
 }
 

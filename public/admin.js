@@ -29,12 +29,7 @@ function renderTable(rows) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${r.seat}</td>
-<<<<<<< HEAD
       <td>${escapeHtml(r.studentId)}</td>
-=======
-      <td>${escapeHtml(r.name)}</td>
-      <td>${escapeHtml(r.grade || '-')}</td>
->>>>>>> 9fb37368eb19c106442f6d13f3d7e5991b33f244
       <td class="code-cell">${r.code}</td>
       <td>${new Date(r.createdAt).toLocaleString('ko-KR')}</td>
     `;
