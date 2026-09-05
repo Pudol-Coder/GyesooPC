@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>계수중 PC방 - 소개</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="doc-wrap">
+  <a href="index.html" class="doc-back">← 처음으로</a>
+
+  <div class="doc-header">
+    <div class="doc-emoji">🖥️</div>
+    <h1 class="doc-title">계수중 PC방 행사 안내</h1>
+    <div class="doc-meta">인천계수중학교 · 컴퓨터실 34석</div>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <section class="doc-section">
+    <h2>🎟️ 예약 방법</h2>
+    <ol class="doc-list">
+      <li>메인 화면에서 <b>예약하기</b>를 눌러요</li>
+      <li>원하는 좌석을 골라요</li>
+      <li>학번(5자리)과 전화번호를 입력해요</li>
+      <li>예약 완료! 입장 코드는 관리자에게 문의하면 확인할 수 있어요</li>
+    </ol>
+  </section>
+
+  <section class="doc-section">
+    <h2>💻 이용 안내</h2>
+    <div class="callout">
+      좌석당 이용 시간은 <b>30분</b>이에요. 행사 당일 배정된 좌석 컴퓨터 화면에 코드를 입력하면 이용이 시작돼요.
+    </div>
+    <ul class="doc-list">
+      <li>사전 예약과 당일 현장 예약 모두 가능해요</li>
+      <li>같은 학번으로는 좌석 하나만 예약할 수 있어요</li>
+      <li>예약을 취소하고 싶으면 관리자에게 말해주세요</li>
+    </ul>
+  </section>
+
+  <section class="doc-section">
+    <h2>❓ 자주 묻는 질문</h2>
+    <details class="doc-toggle">
+      <summary>코드를 잊어버렸어요</summary>
+      <p>학번을 알려주시면 관리자가 다시 확인해드려요.</p>
+    </details>
+    <details class="doc-toggle">
+      <summary>친구랑 같이 앉을 수 있나요?</summary>
+      <p>한 책상에 컴퓨터가 2대씩 있으니, 옆 좌석을 각자 예약하면 같이 앉을 수 있어요.</p>
+    </details>
+    <details class="doc-toggle">
+      <summary>30분이 지나면 어떻게 되나요?</summary>
+      <p>자동으로 로그아웃돼요. 더 이용하고 싶으면 관리자에게 문의해주세요.</p>
+    </details>
+  </section>
+
+  <div class="doc-divider"></div>
+
+  <section class="doc-section">
+    <h2>✉️ 문의하기</h2>
+    <p class="doc-p">궁금한 점이나 하고 싶은 말이 있으면 남겨주세요.</p>
+
+    <div id="inquiryForm">
+      <div class="field">
+        <label for="iqName">학번 또는 이름</label>
+        <input id="iqName" type="text" maxlength="20" placeholder="예: 20305 또는 홍길동">
+      </div>
+      <div class="field">
+        <label for="iqMessage">문의 내용</label>
+        <textarea id="iqMessage" rows="4" maxlength="500" placeholder="궁금한 점을 적어주세요"></textarea>
+      </div>
+      <div class="error" id="iqError"></div>
+      <button class="btn btn-primary" id="iqSubmit" style="width:100%;">문의 남기기</button>
+    </div>
+    <div id="iqDone" style="display:none;" class="callout">
+      문의가 접수되었어요. 확인 후 답변드릴게요!
+    </div>
+  </section>
+</div>
+<script src="about.js"></script>
+</body>
+</html>

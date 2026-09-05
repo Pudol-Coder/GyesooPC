@@ -21,6 +21,7 @@ async function load() {
     applyFilter();
     document.getElementById('count').textContent = `총 ${data.count}건`;
     document.getElementById('downloadBtn').style.display = data.count ? '' : 'none';
+    loadInquiries();
   } catch (e) {
     errorMsg.textContent = '네트워크 오류가 발생했습니다.';
     errorMsg.classList.add('show');
@@ -89,8 +90,51 @@ function applyFilter() {
   renderTable(rows);
 }
 
-document.getElementById('searchBox').addEventListener('input', applyFilter);
-document.getElementById('loadBtn').addEventListener('click', load);
+async function loadInquiries() {
+  try {
+    const res = await fetch('/api/inquiries', { headers: { 'x-admin-key': currentKey() } });
+    const data = await res.json();
+    if (!res.ok) return;
+    renderInquiries(data.inquiries);
+    document.getElementById('iqCount').textContent = `총 ${data.count}건`;
+  } catch (e) {
+    // 문의 로딩 실패는 예약 화면 자체를 막지 않음
+  }
+}
+
+function renderInquiries(rows) {
+  const tbody = document.getElementById('iqTbody');
+  tbody.innerHTML = '';
+  rows.forEach((r) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(r.name)}</td>
+      <td>${escapeHtml(r.message)}</td>
+      <td>${new Date(r.createdAt).toLocaleString('ko-KR')}</td>
+      <td><button class="delete-btn" data-id="${r.id}">삭제</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('iqTable').style.display = rows.length ? '' : 'none';
+
+  tbody.querySelectorAll('.delete-btn').forEach((btn) => {
+    btn.addEventListener('click', () => onDeleteInquiry(btn.dataset.id, btn));
+  });
+}
+
+async function onDeleteInquiry(id, btn) {
+  if (!confirm('이 문의를 삭제할까요?')) return;
+  btn.disabled = true;
+  try {
+    await fetch(`/api/inquiries?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-key': currentKey() },
+    });
+    loadInquiries();
+  } catch (e) {
+    btn.disabled = false;
+  }
+}
 document.getElementById('downloadBtn').addEventListener('click', () => {
   if (!lastData) return;
   const blob = new Blob([JSON.stringify(lastData.reservations, null, 2)], { type: 'application/json' });
@@ -101,3 +145,5 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   a.click();
   URL.revokeObjectURL(url);
 });
+document.getElementById('searchBox').addEventListener('input', applyFilter);
+document.getElementById('loadBtn').addEventListener('click', load);
