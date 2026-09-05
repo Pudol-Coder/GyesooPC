@@ -1,7 +1,11 @@
 let lastData = null;
 
+function currentKey() {
+  return document.getElementById('adminKey').value.trim();
+}
+
 async function load() {
-  const key = document.getElementById('adminKey').value.trim();
+  const key = currentKey();
   const errorMsg = document.getElementById('errorMsg');
   errorMsg.classList.remove('show');
   try {
@@ -32,10 +36,43 @@ function renderTable(rows) {
       <td>${escapeHtml(r.studentId)}</td>
       <td class="code-cell">${r.code}</td>
       <td>${new Date(r.createdAt).toLocaleString('ko-KR')}</td>
+      <td><button class="delete-btn" data-seat="${r.seat}">삭제</button></td>
     `;
     tbody.appendChild(tr);
   });
   document.getElementById('table').style.display = rows.length ? '' : 'none';
+
+  tbody.querySelectorAll('.delete-btn').forEach((btn) => {
+    btn.addEventListener('click', () => onDelete(btn.dataset.seat, btn));
+  });
+}
+
+async function onDelete(seat, btn) {
+  if (!confirm(`${seat}번 좌석 예약을 삭제할까요?`)) return;
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.classList.remove('show');
+  btn.disabled = true;
+  btn.textContent = '삭제 중...';
+  try {
+    const key = currentKey();
+    const res = await fetch(`/api/reservations?key=${encodeURIComponent(key)}&seat=${encodeURIComponent(seat)}`, {
+      method: 'DELETE',
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errorMsg.textContent = data.error === 'UNAUTHORIZED' ? '관리자 키가 올바르지 않습니다.' : '삭제에 실패했습니다.';
+      errorMsg.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = '삭제';
+      return;
+    }
+    load();
+  } catch (e) {
+    errorMsg.textContent = '네트워크 오류가 발생했습니다.';
+    errorMsg.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = '삭제';
+  }
 }
 
 function escapeHtml(str) {
