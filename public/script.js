@@ -8,6 +8,7 @@ const resultSeatLabel = document.getElementById('resultSeatLabel');
 const resultCode = document.getElementById('resultCode');
 const errorMsg = document.getElementById('errorMsg');
 const studentIdInput = document.getElementById('studentId');
+const phoneInput = document.getElementById('phone');
 const submitBtn = document.getElementById('submitBtn');
 
 let selectedSeat = null;
@@ -71,6 +72,7 @@ function onSeatClick(id, btn) {
   document.getElementById('formView').style.display = '';
   document.getElementById('resultView').style.display = 'none';
   studentIdInput.value = '';
+  phoneInput.value = '';
   panel.classList.add('open');
   setTimeout(() => studentIdInput.focus(), 200);
 }
@@ -88,8 +90,14 @@ function closePanel() {
 
 submitBtn.addEventListener('click', async () => {
   const studentId = studentIdInput.value.trim();
+  const phone = phoneInput.value.trim().replace(/[^0-9]/g, '');
   if (!/^[0-9]{5}$/.test(studentId)) {
     errorMsg.textContent = '학번 5자리를 숫자로 입력해주세요.';
+    errorMsg.classList.add('show');
+    return;
+  }
+  if (!/^[0-9]{9,11}$/.test(phone)) {
+    errorMsg.textContent = '전화번호를 올바르게 입력해주세요.';
     errorMsg.classList.add('show');
     return;
   }
@@ -99,11 +107,16 @@ submitBtn.addEventListener('click', async () => {
     const res = await fetch('/api/reserve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ seat: selectedSeat, studentId })
+      body: JSON.stringify({ seat: selectedSeat, studentId, phone })
     });
     const data = await res.json();
     if (!res.ok) {
-      errorMsg.textContent = data.error || '예약에 실패했습니다. 다시 시도해주세요.';
+      const messages = {
+        ALREADY_TAKEN: '이미 다른 사람이 예약한 좌석입니다.',
+        DUPLICATE_STUDENT: '이미 이 학번으로 예약된 좌석이 있습니다.',
+        TOO_MANY_REQUESTS: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.',
+      };
+      errorMsg.textContent = messages[data.error] || '예약에 실패했습니다. 다시 시도해주세요.';
       errorMsg.classList.add('show');
       if (data.error === 'ALREADY_TAKEN') {
         takenSeats.add(selectedSeat);

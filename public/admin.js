@@ -5,11 +5,12 @@ function currentKey() {
 }
 
 async function load() {
-  const key = currentKey();
   const errorMsg = document.getElementById('errorMsg');
   errorMsg.classList.remove('show');
   try {
-    const res = await fetch(`/api/reservations?key=${encodeURIComponent(key)}`);
+    const res = await fetch('/api/reservations', {
+      headers: { 'x-admin-key': currentKey() },
+    });
     const data = await res.json();
     if (!res.ok) {
       errorMsg.textContent = data.error === 'UNAUTHORIZED' ? '관리자 키가 올바르지 않습니다.' : '불러오기에 실패했습니다.';
@@ -54,9 +55,9 @@ async function onDelete(seat, btn) {
   btn.disabled = true;
   btn.textContent = '삭제 중...';
   try {
-    const key = currentKey();
-    const res = await fetch(`/api/reservations?key=${encodeURIComponent(key)}&seat=${encodeURIComponent(seat)}`, {
+    const res = await fetch(`/api/reservations?seat=${encodeURIComponent(seat)}`, {
       method: 'DELETE',
+      headers: { 'x-admin-key': currentKey() },
     });
     const data = await res.json();
     if (!res.ok) {

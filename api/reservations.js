@@ -2,7 +2,7 @@ const { kv } = require('@vercel/kv');
 
 function checkAuth(req, res) {
   const adminKey = process.env.ADMIN_KEY;
-  const provided = req.query.key;
+  const provided = req.headers['x-admin-key'];
   if (adminKey && provided !== adminKey) {
     res.status(401).json({ error: 'UNAUTHORIZED' });
     return false;
